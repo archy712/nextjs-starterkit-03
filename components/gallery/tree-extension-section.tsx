@@ -42,7 +42,7 @@ const treeData: TreeDataItem[] = [
 
 export function TreeExtensionSection() {
   return (
-    <div className="flex flex-col gap-4">
+    <>
       <p className="text-sm text-muted-foreground">
         아래 컴포넌트는 shadcn/ui 공식 레지스트리가 아니라{" "}
         <a
@@ -71,6 +71,6 @@ export function TreeExtensionSection() {
           defaultLeafIcon={FileIcon}
         />
       </GallerySection>
-    </div>
+    </>
   );
 }

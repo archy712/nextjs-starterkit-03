@@ -3,13 +3,23 @@
 import * as React from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import { type DateRange } from "react-day-picker";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { FileDropzone } from "@/components/ui/file-dropzone";
+import {
+  KanbanBoard,
+  type KanbanCard as KanbanCardType,
+  type KanbanColumn,
+} from "@/components/ui/kanban-board";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Rating } from "@/components/ui/rating";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { GallerySection } from "@/components/gallery/section";
+import { TreeExtensionSection } from "@/components/gallery/tree-extension-section";
 
 interface Payment {
   id: string;
@@ -75,32 +85,28 @@ const skillOptions = [
   { label: "Supabase", value: "supabase" },
 ];
 
-const MORE_RECOMMENDATIONS = [
-  {
-    title: "Date Range Picker",
-    description:
-      "예약·통계 대시보드의 기간 필터에 자주 쓰이며, 이미 설치된 Calendar + Popover 조합으로 직접 구성할 수 있습니다.",
-  },
-  {
-    title: "Rich Text Editor (예: Tiptap)",
-    description:
-      "게시글·댓글 등 서식이 필요한 입력에 필요하지만 shadcn/ui 코어에는 없습니다.",
-  },
-  {
-    title: "File Dropzone / Uploader",
-    description:
-      "react-dropzone 등과 Attachment 컴포넌트를 조합해 업로드 UI를 구성하면 좋습니다.",
-  },
-  {
-    title: "Kanban Board (예: dnd-kit)",
-    description:
-      "작업 관리형 화면에서 자주 필요하며 Card + dnd-kit으로 조합 가능합니다.",
-  },
+const KANBAN_CARDS: Record<string, KanbanCardType> = {
+  "task-1": { id: "task-1", title: "로그인 페이지 디자인" },
+  "task-2": { id: "task-2", title: "API 명세 작성" },
+  "task-3": { id: "task-3", title: "다크모드 버그 수정" },
+  "task-4": { id: "task-4", title: "갤러리 페이지 배포" },
+  "task-5": { id: "task-5", title: "코드 리뷰" },
+};
+
+const INITIAL_KANBAN_COLUMNS: KanbanColumn[] = [
+  { id: "todo", title: "할 일", cardIds: ["task-1", "task-2"] },
+  { id: "doing", title: "진행 중", cardIds: ["task-3"] },
+  { id: "done", title: "완료", cardIds: ["task-4", "task-5"] },
 ];
 
 export function RecommendedExtensionsSection() {
   const [skills, setSkills] = React.useState<string[]>(["react", "nextjs"]);
   const [rating, setRating] = React.useState(4);
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>();
+  const [files, setFiles] = React.useState<File[]>([]);
+  const [kanbanColumns, setKanbanColumns] = React.useState(
+    INITIAL_KANBAN_COLUMNS,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -108,6 +114,8 @@ export function RecommendedExtensionsSection() {
         아래는 shadcn/ui 공식 갤러리에는 없지만 실무에서 자주 필요한 확장
         컴포넌트를 이 프로젝트에 맞게 직접 구현하거나 조합해 추가한 예시입니다.
       </p>
+
+      <TreeExtensionSection />
 
       <GallerySection
         title="Data Table (TanStack Table)"
@@ -137,18 +145,38 @@ export function RecommendedExtensionsSection() {
       </GallerySection>
 
       <GallerySection
-        title="추가로 고려해볼 확장 컴포넌트"
-        description="실무에서 자주 쓰이지만 아직 이 갤러리에 구현하지 않은 후보들"
-        contentClassName="grid w-full gap-4 sm:grid-cols-2"
+        title="Date Range Picker"
+        description="예약·통계 대시보드의 기간 필터에 자주 쓰이며, 이미 설치된 Calendar(mode=range) + Popover 조합으로 새 의존성 없이 구현했습니다."
       >
-        {MORE_RECOMMENDATIONS.map((item) => (
-          <div key={item.title} className="rounded-md border p-4">
-            <p className="text-sm font-medium">{item.title}</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {item.description}
-            </p>
-          </div>
-        ))}
+        <DateRangePicker value={dateRange} onChange={setDateRange} />
+      </GallerySection>
+
+      <GallerySection
+        title="Rich Text Editor (Tiptap)"
+        description="게시글·댓글 등 서식이 필요한 입력에 필요하지만 shadcn/ui 코어에는 없습니다. @tiptap/react + @tiptap/starter-kit으로 구현했습니다."
+        contentClassName="w-full"
+      >
+        <RichTextEditor />
+      </GallerySection>
+
+      <GallerySection
+        title="File Dropzone / Uploader"
+        description="드래그 앤 드롭으로 파일을 업로드하는 영역. 별도 라이브러리 없이 네이티브 Drag & Drop API와 Attachment 컴포넌트로 구현했습니다."
+        contentClassName="w-full"
+      >
+        <FileDropzone files={files} onChange={setFiles} />
+      </GallerySection>
+
+      <GallerySection
+        title="Kanban Board (dnd-kit)"
+        description="작업 관리형 화면에서 자주 필요하며 Card + @dnd-kit/core + @dnd-kit/sortable로 구현했습니다. 카드를 드래그해 컬럼 간 이동·정렬할 수 있습니다."
+        contentClassName="w-full"
+      >
+        <KanbanBoard
+          columns={kanbanColumns}
+          cards={KANBAN_CARDS}
+          onColumnsChange={setKanbanColumns}
+        />
       </GallerySection>
     </div>
   );
