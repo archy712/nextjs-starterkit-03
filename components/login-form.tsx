@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { GoogleAuthButton } from "@/components/google-auth-button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -103,6 +105,12 @@ export function LoginForm({
               </Link>
             </div>
           </form>
+          <div className="my-6 flex items-center gap-4">
+            <Separator className="flex-1" />
+            <span className="text-xs text-muted-foreground">또는</span>
+            <Separator className="flex-1" />
+          </div>
+          <GoogleAuthButton />
         </CardContent>
       </Card>
     </div>
