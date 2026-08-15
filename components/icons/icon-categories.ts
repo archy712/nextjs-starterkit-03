@@ -166,7 +166,6 @@ export const ICON_CATEGORIES: IconCategory[] = [
       "grip",
       "fullscreen",
       "form",
-      "app-window",
       "appwindow",
     ],
   },
@@ -500,10 +499,30 @@ export const ICON_CATEGORIES: IconCategory[] = [
   },
 ];
 
+// PascalCase 아이콘 이름을 단어 단위로 쪼갭니다 (예: "LocateFixed" -> ["locate", "fixed"]).
+function splitWords(name: string): string[] {
+  const words = name.match(/[A-Z][a-z0-9]*/g);
+  return (words ?? [name]).map((word) => word.toLowerCase());
+}
+
+// 단어 경계를 넘지 않는 1~3개 연속 단어 조합만 생성해, "search"가 "ear"를
+// 포함한다는 이유만으로 매칭되는 것 같은 오탐을 막습니다.
+function wordCombinations(words: string[], maxSpan = 3): Set<string> {
+  const combos = new Set<string>();
+  for (let start = 0; start < words.length; start++) {
+    let combo = "";
+    for (let span = 0; span < maxSpan && start + span < words.length; span++) {
+      combo += words[start + span];
+      combos.add(combo);
+    }
+  }
+  return combos;
+}
+
 export function categorizeIconName(name: string): string {
-  const normalized = name.toLowerCase();
+  const combos = wordCombinations(splitWords(name));
   for (const category of ICON_CATEGORIES) {
-    if (category.keywords.some((keyword) => normalized.includes(keyword))) {
+    if (category.keywords.some((keyword) => combos.has(keyword))) {
       return category.key;
     }
   }
