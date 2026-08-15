@@ -88,9 +88,16 @@ const satisfactionChartConfig = {
   불만족: { label: "불만족", color: "hsl(var(--chart-4))" },
 } satisfies ChartConfig;
 
+// 서버/클라이언트 렌더링 결과가 같아야 hydration 불일치가 발생하지 않으므로
+// Math.random() 대신 인덱스 기반의 결정론적 의사 난수를 사용합니다.
+function pseudoRandom(seed: number) {
+  const x = Math.sin(seed * 12.9898) * 43758.5453;
+  return x - Math.floor(x);
+}
+
 const scatterData = Array.from({ length: 24 }).map((_, i) => ({
-  price: 10 + i * 3 + Math.round(Math.random() * 20),
-  rating: 3 + Math.random() * 2,
+  price: 10 + i * 3 + Math.round(pseudoRandom(i) * 20),
+  rating: 3 + pseudoRandom(i + 100) * 2,
 }));
 
 const scatterChartConfig = {
