@@ -5,13 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { hasEnvVars } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  BarChart3Icon,
+  LayoutGridIcon,
+  SmileIcon,
+  UserCircleIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -35,6 +41,41 @@ const FEATURES = [
     title: "개발 도구 자동화",
     description:
       "ESLint, Prettier, Husky, lint-staged, commitlint로 커밋 전 검사를 자동화했습니다.",
+  },
+];
+
+const GALLERIES = [
+  {
+    icon: LayoutGridIcon,
+    title: "shadcn/ui 컴포넌트 갤러리",
+    description:
+      "Button, Form, Dialog 같은 shadcn/ui 공식 컴포넌트부터 Tree View·데이터 테이블 같은 확장 컴포넌트까지 한 곳에서 살펴볼 수 있습니다.",
+    href: "/gallery",
+    cta: "컴포넌트 갤러리 보기",
+  },
+  {
+    icon: SmileIcon,
+    title: "아이콘 갤러리",
+    description:
+      "이 프로젝트에 포함된 lucide-react 아이콘 전체를 검색하고 클릭 한 번으로 import 구문을 복사할 수 있습니다.",
+    href: "/icons",
+    cta: "아이콘 갤러리 보기",
+  },
+  {
+    icon: UserCircleIcon,
+    title: "아바타 갤러리",
+    description:
+      "크기, 이미지, 이니셜, 상태 배지, 그룹 표시까지 Avatar 컴포넌트의 다양한 활용 방법을 모아볼 수 있습니다.",
+    href: "/avatars",
+    cta: "아바타 갤러리 보기",
+  },
+  {
+    icon: BarChart3Icon,
+    title: "차트 갤러리",
+    description:
+      "recharts 기반 shadcn/ui Chart 컴포넌트로 구현한 막대·선·영역·파이·레이더 등 다양한 차트 유형을 살펴볼 수 있습니다.",
+    href: "/charts",
+    cta: "차트 갤러리 보기",
   },
 ];
 
@@ -86,27 +127,33 @@ export default function Home() {
             </div>
           </section>
 
-          <section>
-            <Card>
-              <CardHeader className="items-center text-center">
-                <CardTitle className="text-2xl">
-                  shadcn/ui 컴포넌트 갤러리
-                </CardTitle>
-                <CardDescription className="max-w-xl">
-                  Button, Form, Dialog 같은 shadcn/ui 공식 컴포넌트부터 Tree
-                  View·데이터 테이블 같은 확장 컴포넌트까지 한 곳에서 살펴볼 수
-                  있습니다.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex justify-center">
-                <Button asChild>
-                  <Link href="/gallery">
-                    컴포넌트 갤러리 보기
-                    <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
+          <section className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-2xl font-bold">갤러리 모음</h2>
+              <p className="text-muted-foreground">
+                UI를 빠르게 조립할 수 있도록 컴포넌트·아이콘·아바타·차트를
+                갤러리 형태로 모아두었습니다.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {GALLERIES.map((gallery) => (
+                <Card key={gallery.href} className="flex flex-col">
+                  <CardHeader className="flex-1">
+                    <gallery.icon className="mb-2 size-6 text-muted-foreground" />
+                    <CardTitle className="text-lg">{gallery.title}</CardTitle>
+                    <CardDescription>{gallery.description}</CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    <Button asChild variant="outline">
+                      <Link href={gallery.href}>
+                        {gallery.cta}
+                        <ArrowRight className="size-4" />
+                      </Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
           </section>
         </div>
       </main>
