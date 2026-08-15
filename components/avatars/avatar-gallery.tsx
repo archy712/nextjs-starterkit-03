@@ -41,6 +41,9 @@ function chartColorStyle(index: number) {
   };
 }
 
+const LARGE_GROUP_VISIBLE = 3;
+const LARGE_GROUP_TOTAL = 15;
+
 const STATUSES = [
   { label: "온라인", className: "bg-emerald-500" },
   { label: "자리비움", className: "bg-amber-500" },
@@ -163,13 +166,15 @@ export function AvatarGallery() {
         </AvatarGroup>
 
         <AvatarGroup>
-          {Array.from({ length: 3 }).map((_, i) => (
+          {Array.from({ length: LARGE_GROUP_VISIBLE }).map((_, i) => (
             <Avatar key={i} size="lg">
               <AvatarImage src={`https://i.pravatar.cc/150?img=${i + 30}`} />
               <AvatarFallback>{i + 1}</AvatarFallback>
             </Avatar>
           ))}
-          <AvatarGroupCount>+12</AvatarGroupCount>
+          <AvatarGroupCount>
+            +{LARGE_GROUP_TOTAL - LARGE_GROUP_VISIBLE}
+          </AvatarGroupCount>
         </AvatarGroup>
       </GallerySection>
     </div>
