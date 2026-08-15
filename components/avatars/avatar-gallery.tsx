@@ -48,10 +48,35 @@ const STATUSES = [
   { label: "오프라인", className: "bg-zinc-400" },
 ];
 
+const SECTIONS = [
+  { key: "sizes", label: "크기", count: 3 },
+  { key: "images", label: "이미지 아바타", count: 12 },
+  { key: "initials", label: "이니셜 아바타", count: TEAM_NAMES.length },
+  { key: "status", label: "상태 배지", count: STATUSES.length },
+  { key: "groups", label: "아바타 그룹", count: 3 },
+];
+
 export function AvatarGallery() {
   return (
     <div className="flex flex-col gap-4">
-      <GallerySection title="크기" description="sm · default · lg 세 가지 크기">
+      <div className="flex flex-wrap gap-2">
+        {SECTIONS.map((section) => (
+          <a
+            key={section.key}
+            href={`#avatar-section-${section.key}`}
+            className="rounded-full border px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+          >
+            {section.label}{" "}
+            <span className="text-muted-foreground/70">{section.count}</span>
+          </a>
+        ))}
+      </div>
+
+      <GallerySection
+        id="avatar-section-sizes"
+        title="크기"
+        description="sm · default · lg 세 가지 크기"
+      >
         <Avatar size="sm">
           <AvatarFallback>SM</AvatarFallback>
         </Avatar>
@@ -64,6 +89,7 @@ export function AvatarGallery() {
       </GallerySection>
 
       <GallerySection
+        id="avatar-section-images"
         title="이미지 아바타"
         description="원격 이미지를 불러오고, 로드에 실패하면 이니셜로 대체됩니다"
       >
@@ -79,6 +105,7 @@ export function AvatarGallery() {
       </GallerySection>
 
       <GallerySection
+        id="avatar-section-initials"
         title="이니셜 아바타"
         description="이미지가 없을 때 이름 이니셜과 색상으로 구분합니다"
       >
@@ -92,6 +119,7 @@ export function AvatarGallery() {
       </GallerySection>
 
       <GallerySection
+        id="avatar-section-status"
         title="상태 배지"
         description="AvatarBadge로 접속 상태를 함께 표시합니다"
       >
@@ -109,6 +137,7 @@ export function AvatarGallery() {
       </GallerySection>
 
       <GallerySection
+        id="avatar-section-groups"
         title="아바타 그룹"
         description="여러 아바타를 겹쳐서 표시하고 초과 인원은 카운트로 요약합니다"
         contentClassName="flex flex-wrap items-center gap-8"
