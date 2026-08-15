@@ -45,10 +45,14 @@ export function IconGallery() {
     [groups],
   );
 
-  const handleCopy = (name: string) => {
+  const handleCopy = async (name: string) => {
     const snippet = `import { ${name} } from "lucide-react";`;
-    navigator.clipboard.writeText(snippet);
-    toast(`${name} import 구문이 복사되었습니다`);
+    try {
+      await navigator?.clipboard?.writeText(snippet);
+      toast(`${name} import 구문이 복사되었습니다`);
+    } catch {
+      toast.error("클립보드 복사에 실패했습니다");
+    }
   };
 
   return (
